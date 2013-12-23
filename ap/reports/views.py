@@ -1,14 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
-from django.template import Context
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ArchiveIndexView, DetailView, CreateView, DeleteView 
-# from xhtml2pdf import pisa             # import python module
-from accounts.models import User, Trainee
+from django.shortcuts import render, render_to_response, RequestContext
+from django_tables2   import RequestConfig
+from accounts.models import Trainee
+from reports.tables import TraineeTable
 
 def index(request):
-    name = User(firstname ="Armad", lastname ="Ellis")
-    list = User.objects.all().order_by('firstname')
+    return HttpResponse("test")
     
-    
-    
+def table(request):
+	queryset = Trainee.objects.all()
+	table = TraineeTable(queryset)
+	RequestConfig(request).configure(table)
+	return render_to_response("trainees.html", {"table": table}, context_instance=RequestContext(request))

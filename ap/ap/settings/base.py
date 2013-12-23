@@ -102,11 +102,23 @@ ROOT_URLCONF = 'ap.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ap.wsgi.application'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+"django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.core.context_processors.tz",
+"django.contrib.messages.context_processors.messages",
+'django.core.context_processors.request',
+)
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, 'templates'),
+    os.path.join(SITE_ROOT, 'reports/templates'),
 )
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -124,6 +136,7 @@ INSTALLED_APPS = (
     # third-party modules
     'autofixture',
     'django_reset',
+    'django_tables2',
     # ap modules
     'accounts',
     'aputils',
@@ -132,6 +145,7 @@ INSTALLED_APPS = (
     'houses',
     'localities',
     'rooms',
+    'reports',
     'services',
     'teams',
     'terms',
