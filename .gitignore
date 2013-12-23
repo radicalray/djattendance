@@ -3,4 +3,6 @@
 key.pub
 ap/.project
 ap/.pydevproject
-
+dj.sublime-project
+dj.sublime-workspace
+.gitignore

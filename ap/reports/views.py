@@ -10,5 +10,5 @@ def index(request):
 def table(request):
 	queryset = Trainee.objects.all()
 	table = TraineeTable(queryset)
-	RequestConfig(request).configure(table)
+	RequestConfig(request, paginate={"per_page": 3}).configure(table)
 	return render_to_response("trainees.html", {"table": table}, context_instance=RequestContext(request))
