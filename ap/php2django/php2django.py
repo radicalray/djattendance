@@ -1,14 +1,26 @@
 #!/usr/bin/python
 
+import MySQLdb
 import os
+import pickle
 import re
 import sys
 import types
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 settingsPath = "ap.settings.local"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settingsPath)
 from django.conf import settings
+
+
+db = MySQLdb.connect(host="localhost", # your host, usually localhost
+                     user="Monitor", # your username
+                      passwd="man2god", # your password
+                      db="officedb") # name of the data base
+
+# you must create a Cursor object. It will let
+#  you execute all the queries you need
+cur = db.cursor() 
 
 from accounts.models import User, Trainee, TrainingAssistant
 
@@ -30,7 +42,8 @@ class importTemplate:
                 if isinstance(var,types.FunctionType):
                     print prop, var(self.mapping,result)
                 else:
-                    print prop, var 
+                    print prop, var
+        modelInstance = self.model()
 
 class importUser(importTemplate):
     model=User
@@ -54,18 +67,6 @@ temp.doImport()
 
 # unpack args dict: function(**dictname)
 # list: function(*listname)
-
-import MySQLdb
-import pickle
-
-db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                     user="Monitor", # your username
-                      passwd="man2god", # your password
-                      db="officedb") # name of the data base
-
-# you must create a Cursor object. It will let
-#  you execute all the queries you need
-cur = db.cursor() 
 
 # Use all the SQL you like
 cur.execute("SELECT * FROM user ")
