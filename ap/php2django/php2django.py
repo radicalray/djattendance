@@ -35,18 +35,22 @@ class importTemplate:
         cur.execute(self.query)
         result = cur.fetchall()
         for row in result:
-            param = {}
-            for prop in self.mapping.__dict__:
-                if not ignore.match(prop):
-                    var = self.mapping.__dict__[prop]
-                    if isinstance(var,types.FunctionType):
-                        param[prop]=var(self.mapping,row)
-                    else:
-                        param[prop]=row[var]
-            modelInstance = self.model.objects.create(**param)
-            print param
-            #print modelInstance
-            break
+            try:
+                param = {}
+                print row
+                for prop in self.mapping.__dict__:
+                    if not ignore.match(prop):
+                        var = self.mapping.__dict__[prop]
+                        if isinstance(var,types.FunctionType):
+                            param[prop]=var(self.mapping,row)
+                        else:
+                            param[prop]=row[var]
+                print param
+                modelInstance = self.model.objects.create(**param)
+                print modelInstance
+            except Exception, exp:
+                print exp
+            break;
 
 # unpack args dict: function(**dictname)
 # list: function(*listname)

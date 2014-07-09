@@ -16,14 +16,18 @@ class importUser(php2django.importTemplate):
     key=0
     
     class mapping:
-        firstname=5
-        nickname=8
-        lastname=6
-        middlename=7
-        maidenname=9
-        date_of_birth=11
-        gender=10
-        is_active=13
+        firstname=3
+        nickname=4
+        lastname=5
+        def middlename(self,row):
+            value=row[6]
+            return '' if value is None else value
+        def maidenname(self,row):
+            value=row[7]
+            return '' if value is None else value
+        date_of_birth=8
+        gender=9
+        is_active=17
 #         def functionTest(self,queryResult):
 #             return str(queryResult)
 
