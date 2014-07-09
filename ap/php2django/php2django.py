@@ -15,8 +15,24 @@ from accounts.models import User, Trainee, TrainingAssistant
 if __name__== "__main__":
     print User.objects.all()
 
+ignore = re.compile('^__.*__$')
+class importTemplate:
+    def doLookup(self):
+        #connect to mysql and execute query
+        #return query result
+        return tuple([])
+    
+    def doImport(self):
+        result = self.doLookup()
+        for prop in self.mapping.__dict__:
+            if not ignore.match(prop):
+                var = self.mapping.__dict__[prop]
+                if isinstance(var,types.FunctionType):
+                    print prop, var(self.mapping,result)
+                else:
+                    print prop, var 
 
-class importUser:
+class importUser(importTemplate):
     model=User
     query='SELECT * FROM user'
     
@@ -30,28 +46,22 @@ class importUser:
         birthDate=11
         gender=10
         active=13
-        def functionTest(self):
-            return "function"
+        def functionTest(self,queryResult):
+            return str(queryResult)
 
-ignore = re.compile('^__.*__$')
+temp = importUser()
+temp.doImport()
 
-for prop in importUser.mapping.__dict__:
-    if not ignore.match(prop):
-        var = importUser.mapping.__dict__[prop]
-        if isinstance(var,types.FunctionType):
-            print prop, var(importUser.mapping)
-        else:
-            print prop, var 
-
-'''
+# unpack args dict: function(**dictname)
+# list: function(*listname)
 
 import MySQLdb
 import pickle
 
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                     user="root", # your username
-                      passwd="lifeunion", # your password
-                      db="phptodjangodb") # name of the data base
+                     user="Monitor", # your username
+                      passwd="man2god", # your password
+                      db="officedb") # name of the data base
 
 # you must create a Cursor object. It will let
 #  you execute all the queries you need
@@ -102,6 +112,3 @@ userinfo = pickle.load(reading)
 print userinfo
 
 g.write(' '.join(str(atuple) for atuple in userinfo) + '\n')
-
-
-'''
