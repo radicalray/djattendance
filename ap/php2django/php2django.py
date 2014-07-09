@@ -1,4 +1,33 @@
 #!/usr/bin/python
+
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('..'))
+settingsPath = "ap.settings.local"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", settingsPath)
+from django.conf import settings
+
+from accounts.models import User, Trainee, TrainingAssistant
+
+if __name__== "__main__":
+    print User.objects.all()
+    
+configuration = { 'model': User,
+    'query':'SELECT * FROM user',
+    'mapping': {
+        'ID':0,
+        'firstName':5,
+        'nickName':8,
+        'lastName':6,
+        'middleName':7,
+        'maidenName':9,
+        'birthDate':11,
+        'gender':10,
+        'active':13,} }
+
+print configuration
+
 import MySQLdb
 import pickle
 
