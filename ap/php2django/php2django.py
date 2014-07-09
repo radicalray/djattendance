@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
 import os
+import re
 import sys
+import types
 
 sys.path.insert(0, os.path.abspath('..'))
 settingsPath = "ap.settings.local"
@@ -12,21 +14,36 @@ from accounts.models import User, Trainee, TrainingAssistant
 
 if __name__== "__main__":
     print User.objects.all()
-    
-configuration = { 'model': User,
-    'query':'SELECT * FROM user',
-    'mapping': {
-        'ID':0,
-        'firstName':5,
-        'nickName':8,
-        'lastName':6,
-        'middleName':7,
-        'maidenName':9,
-        'birthDate':11,
-        'gender':10,
-        'active':13,} }
 
-print configuration
+
+class importUser:
+    model=User
+    query='SELECT * FROM user'
+    
+    class mapping:
+        ID=0
+        firstName=5
+        nickName=8
+        lastName=6
+        middleName=7
+        maidenName=9
+        birthDate=11
+        gender=10
+        active=13
+        def functionTest(self):
+            return "function"
+
+ignore = re.compile('^__.*__$')
+
+for prop in importUser.mapping.__dict__:
+    if not ignore.match(prop):
+        var = importUser.mapping.__dict__[prop]
+        if isinstance(var,types.FunctionType):
+            print prop, var(importUser.mapping)
+        else:
+            print prop, var 
+
+'''
 
 import MySQLdb
 import pickle
@@ -87,3 +104,4 @@ print userinfo
 g.write(' '.join(str(atuple) for atuple in userinfo) + '\n')
 
 
+'''
