@@ -7,7 +7,9 @@ import re
 import sys
 import types
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
+if __name__== "__main__":
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
+
 settingsPath = "ap.settings.local"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settingsPath)
 from django.conf import settings
@@ -29,41 +31,22 @@ if __name__== "__main__":
 
 ignore = re.compile('^__.*__$')
 class importTemplate:
-    def doLookup(self):
-        #connect to mysql and execute query
-        #return query result
-        return tuple([])
-    
     def doImport(self):
-        result = self.doLookup()
-        for prop in self.mapping.__dict__:
-            if not ignore.match(prop):
-                var = self.mapping.__dict__[prop]
-                if isinstance(var,types.FunctionType):
-                    print prop, var(self.mapping,result)
-                else:
-                    print prop, var
-        modelInstance = self.model()
-
-class importUser(importTemplate):
-    model=User
-    query='SELECT * FROM user'
-    
-    class mapping:
-        ID=0
-        firstName=5
-        nickName=8
-        lastName=6
-        middleName=7
-        maidenName=9
-        birthDate=11
-        gender=10
-        active=13
-        def functionTest(self,queryResult):
-            return str(queryResult)
-
-temp = importUser()
-temp.doImport()
+        cur.execute(self.query)
+        result = cur.fetchall()
+        for row in result:
+            param = {}
+            for prop in self.mapping.__dict__:
+                if not ignore.match(prop):
+                    var = self.mapping.__dict__[prop]
+                    if isinstance(var,types.FunctionType):
+                        param[prop]=var(self.mapping,row)
+                    else:
+                        param[prop]=row[var]
+            modelInstance = self.model.objects.create(**param)
+            print param
+            #print modelInstance
+            break
 
 # unpack args dict: function(**dictname)
 # list: function(*listname)
@@ -73,7 +56,7 @@ cur.execute("SELECT * FROM user ")
 
 num_fields = len(cur.description)
 field_names = [i[0] for i in cur.description]
-
+'''
 f=open('phpdata','w')
 g=open('userdictionary', 'w')
 
@@ -113,3 +96,4 @@ userinfo = pickle.load(reading)
 print userinfo
 
 g.write(' '.join(str(atuple) for atuple in userinfo) + '\n')
+'''
