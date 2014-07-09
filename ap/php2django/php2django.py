@@ -26,8 +26,8 @@ cur = db.cursor()
 
 from accounts.models import User, Trainee, TrainingAssistant
 
-if __name__== "__main__":
-    print User.objects.all()
+# if __name__== "__main__":
+print User.objects.all()
 
 ignore = re.compile('^__.*__$')
 class importTemplate:
@@ -35,28 +35,28 @@ class importTemplate:
     
     
     def importRow(self,row):
-        try:
-            param = {}
-            print row
-            for prop in self.mapping.__dict__:
-                if not ignore.match(prop):
-                    var = self.mapping.__dict__[prop]
-                    if isinstance(var,types.FunctionType):
-                        param[prop]=var(self.mapping,row)
-                    else:
-                        param[prop]=row[var]
-            print param
-            modelInstance = self.model.objects.create(**param)
-            modelInstance.save()
-            if not self.key is None:
-                if isinstance(self.key,type.FunctionType):
-                    key = self.key(row)
+        #try:
+        param = {}
+        print row
+        for prop in self.mapping.__dict__:
+            if not ignore.match(prop):
+                var = self.mapping.__dict__[prop]
+                if isinstance(var,types.FunctionType):
+                    param[prop]=var(self.mapping,row)
                 else:
-                    key = row[self.key]
-                self.keyMap[key]=modelInstance.pk
-            print modelInstance
-        except Exception, exp:
-            print exp
+                    param[prop]=row[var]
+        print param
+        modelInstance = self.model.objects.create(**param)
+        modelInstance.save()
+        if not self.key is None:
+            if isinstance(self.key,type.FunctionType):
+                key = self.key(row)
+            else:
+                key = row[self.key]
+            self.keyMap[key]=modelInstance.pk
+        print modelInstance
+        #except Exception, exp:
+        #    print exp
     
     def doImport(self):
         cur.execute(self.query)
@@ -70,11 +70,11 @@ class importTemplate:
 # list: function(*listname)
 
 # Use all the SQL you like
+'''
 cur.execute("SELECT * FROM user ")
 
 num_fields = len(cur.description)
 field_names = [i[0] for i in cur.description]
-'''
 f=open('phpdata','w')
 g=open('userdictionary', 'w')
 
